@@ -43,7 +43,7 @@ export const Footer = () => (
             <h4 className="text-[11px] tracking-[0.3em] uppercase text-ash font-semibold">Downloads</h4>
             <div className="mt-4 space-y-3">
               <a
-                href="/downloads/Lucky-Engineering-Works-Profile.pdf"
+                href={PUB + "/downloads/Lucky-Engineering-Works-Profile.pdf"}
                 target="_blank"
                 rel="noopener noreferrer"
                 data-testid="footer-download-profile"
@@ -53,7 +53,7 @@ export const Footer = () => (
                 Company Profile (PDF)
               </a>
               <a
-                href="/downloads/Lucky-Engineering-Product-Range.pdf"
+                href={PUB + "/downloads/Lucky-Engineering-Product-Range.pdf"}
                 target="_blank"
                 rel="noopener noreferrer"
                 data-testid="footer-download-products"

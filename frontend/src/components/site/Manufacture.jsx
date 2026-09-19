@@ -132,7 +132,7 @@ export const Manufacture = ({ onQuote }) => {
                     <ProductCard
                       key={key}
                       name={name}
-                      img={`/images/products/${key}.jpg`}
+                      img={`${PUB}/images/products/${key}.jpg`}
                       testId={`product-card-${key}`}
                       onOpen={() =>
                         setActive(FLAT.findIndex((f) => f.key === key))
