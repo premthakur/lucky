@@ -106,9 +106,9 @@ export const Footer = () => (
                 data-testid="footer-directions-link"
                 className="hover:text-copper transition-colors duration-300"
               >
-                Gala No. 04, Ganesh Industrial Estate,<br />
-                Near Parmar Talav, Dhaniv, Vasai Phata,<br />
-                Vasai East, Vasai-Virar, Maharashtra 401208
+                A-15, Arihant Industries Estate, Parmar Business Centre,<br />
+                Infront of Parmar Phase 1 Gate, Vasai Phata,<br />
+                Vasai East, Maharashtra 401208
               </a>
             </li>
             <li className="flex items-center gap-3" data-testid="footer-phone">
@@ -117,7 +117,7 @@ export const Footer = () => (
             </li>
             <li className="flex items-center gap-3" data-testid="footer-email">
               <Mail size={16} className="text-copper shrink-0" />
-              <span>contact@luckyengineeringwork.com</span>
+              <span>contact@luckyengineeringworks.com</span>
             </li>
           </ul>
         </div>
