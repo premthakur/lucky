@@ -13,16 +13,13 @@ module.exports = {
         sm: 'calc(var(--radius) - 4px)'
       },
       colors: {
-        coal: '#0F1012',
-        'coal-deep': '#0B0C0E',
-        surface: '#1A1C20',
-        bone: '#F3F4F0',
-        steel: '#78828A',
-        ash: '#4B5563',
-        copper: '#E65C24',
-        'copper-hover': '#D95A2B',
-        line: '#2A2D33',
-        'line-strong': '#4A4D54',
+        paper: '#F7F8F9',
+        surface: '#EEF0F2',
+        ink: '#16181B',
+        graphite: '#5E6570',
+        hairline: '#E1E4E8',
+        copper: '#C2491A',
+        'copper-hover': '#A63E15',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
@@ -58,14 +55,12 @@ module.exports = {
         ring: 'hsl(var(--ring))'
       },
       fontFamily: {
-        display: ['Oswald', 'sans-serif'],
-        sans: ['Manrope', 'sans-serif']
+        sans: ['Archivo', 'system-ui', 'sans-serif']
+      },
+      maxWidth: {
+        shell: '84rem'
       },
       keyframes: {
-        marquee: {
-          from: { transform: 'translateX(0)' },
-          to: { transform: 'translateX(-50%)' }
-        },
         'accordion-down': {
           from: { height: '0' },
           to: { height: 'var(--radix-accordion-content-height)' }
@@ -76,7 +71,6 @@ module.exports = {
         }
       },
       animation: {
-        marquee: 'marquee 48s linear infinite',
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out'
       }

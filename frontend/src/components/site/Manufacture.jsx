@@ -1,52 +1,48 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, X, ZoomIn } from "lucide-react";
-import { Chapter, EASE, Reveal } from "./Reveal";
+import { ArrowLeft, ArrowRight, X } from "lucide-react";
+import { EASE, Section, SectionHeading } from "./ui";
 import { PUB } from "@/data/images";
 
 const CATEGORIES = [
   {
-    n: "01",
-    name: "CNC Turned Components",
+    name: "CNC turned components",
     items: [
-      ["Precision Shafts", "shafts"],
-      ["Threaded Components", "threaded"],
-      ["Bushings & Couplings", "bushings"],
-      ["Spacers & Sleeves", "spacers"],
-      ["Pins & Studs", "pins"],
+      ["Precision shafts", "shafts"],
+      ["Threaded components", "threaded"],
+      ["Bushings & couplings", "bushings"],
+      ["Spacers & sleeves", "spacers"],
+      ["Pins & studs", "pins"],
     ],
   },
   {
-    n: "02",
-    name: "Automotive Machined Parts",
+    name: "Automotive machined parts",
     items: [
-      ["Engine Components", "engine"],
-      ["Transmission Shafts", "transmission"],
-      ["Gearbox Components", "gearbox"],
-      ["Steering Components", "steering"],
-      ["Suspension Parts", "suspension"],
+      ["Engine components", "engine"],
+      ["Transmission shafts", "transmission"],
+      ["Gearbox components", "gearbox"],
+      ["Steering components", "steering"],
+      ["Suspension parts", "suspension"],
     ],
   },
   {
-    n: "03",
-    name: "Hydraulic & Pneumatic Components",
+    name: "Hydraulic & pneumatic components",
     items: [
-      ["Hydraulic Fittings", "hydraulic-fittings"],
-      ["Valve Components", "valve"],
-      ["Cylinder Parts", "cylinder"],
-      ["Adapter Fittings", "adapters"],
-      ["Connector Components", "connectors"],
+      ["Hydraulic fittings", "hydraulic-fittings"],
+      ["Valve components", "valve"],
+      ["Cylinder parts", "cylinder"],
+      ["Adapter fittings", "adapters"],
+      ["Connector components", "connectors"],
     ],
   },
   {
-    n: "04",
-    name: "Industrial Machine Components",
+    name: "Industrial machine components",
     items: [
-      ["Machine Shafts", "machine-shafts"],
+      ["Machine shafts", "machine-shafts"],
       ["Rollers", "rollers"],
-      ["Bearing Housings", "bearing-housings"],
-      ["Coupling Hubs", "coupling-hubs"],
-      ["Mounting Flanges", "flanges"],
+      ["Bearing housings", "bearing-housings"],
+      ["Coupling hubs", "coupling-hubs"],
+      ["Mounting flanges", "flanges"],
     ],
   },
 ];
@@ -56,26 +52,38 @@ const FLAT = CATEGORIES.flatMap((c) =>
 );
 
 const ProductCard = ({ name, img, testId, onOpen }) => (
-  <div className="group cursor-pointer" data-testid={testId} onClick={onOpen}>
-    <div className="relative overflow-hidden aspect-square border border-line group-hover:border-copper/60 transition-colors duration-500 bg-coal-deep">
-      <img
-        src={img}
-        alt={name}
-        loading="lazy"
-        className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.06] transition-transform duration-[900ms] ease-out"
-      />
-      <span className="absolute top-3 right-3 w-8 h-8 bg-coal/70 backdrop-blur border border-line flex items-center justify-center text-bone/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <ZoomIn size={14} />
+  <li>
+    <button
+      type="button"
+      onClick={onOpen}
+      data-testid={testId}
+      className="group block w-full text-left"
+      aria-label={`Enlarge photo: ${name}`}
+    >
+      <span className="block overflow-hidden rounded-lg bg-surface">
+        <img
+          src={img}
+          alt=""
+          loading="lazy"
+          className="aspect-square w-full object-cover transition-opacity duration-200 group-hover:opacity-90"
+        />
       </span>
-    </div>
-    <p className="mt-3 text-[12px] tracking-[0.14em] uppercase text-steel group-hover:text-bone transition-colors duration-300 font-medium">
-      {name}
-    </p>
-  </div>
+      <span className="mt-3 block text-[15px] leading-snug text-ink">{name}</span>
+    </button>
+  </li>
 );
 
-export const Manufacture = ({ onQuote }) => {
+const NavButton = ({ className = "", ...rest }) => (
+  <button
+    type="button"
+    className={`absolute z-20 grid h-11 w-11 place-items-center rounded-full bg-white/10 text-white transition-colors duration-200 hover:bg-white/20 ${className}`}
+    {...rest}
+  />
+);
+
+export const Manufacture = () => {
   const [active, setActive] = useState(null);
+  const [tab, setTab] = useState(0);
 
   useEffect(() => {
     document.body.style.overflow = active !== null ? "hidden" : "";
@@ -98,153 +106,118 @@ export const Manufacture = ({ onQuote }) => {
   const current = active !== null ? FLAT[active] : null;
 
   return (
-    <section id="manufacture" className="py-24 lg:py-36" data-testid="manufacture-section">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
-        <div className="max-w-2xl mb-16">
-          <Reveal>
-            <Chapter index="03" label="What We Manufacture" />
-            <h2 className="font-display font-semibold uppercase leading-[1.02] text-4xl sm:text-5xl lg:text-6xl text-bone">
-              Components Made <span className="text-steel">to Drawing,</span>{" "}
-              Made to Last
-            </h2>
-            <p className="mt-6 text-[11px] tracking-[0.3em] uppercase text-ash">
-              Representative examples of our manufacturing scope · Click any photo to enlarge
-            </p>
-          </Reveal>
-        </div>
+    <Section id="products" className="border-t border-hairline" data-testid="manufacture-section">
+      <SectionHeading
+        title="Product range"
+        intro="Example parts from our machining scope, grouped by type. Select a photo to see it larger."
+      />
 
-        <div className="space-y-16 lg:space-y-20">
-          {CATEGORIES.map((cat, ci) => (
-            <Reveal key={cat.n}>
-              <div data-testid={`manufacture-category-${cat.n}`}>
-                <div className="flex items-baseline gap-5 mb-8">
-                  <span className="font-display text-copper text-sm tracking-[0.3em]">{cat.n}</span>
-                  <h3 className="font-display font-semibold uppercase text-2xl lg:text-3xl text-bone">
-                    {cat.name}
-                  </h3>
-                  <span className="hidden sm:block flex-1 h-px bg-line" />
-                  <span className="hidden sm:block text-[11px] tracking-[0.25em] uppercase text-ash">
-                    {cat.items.length} Product Lines
-                  </span>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5 lg:gap-6">
-                  {cat.items.map(([name, key]) => (
-                    <ProductCard
-                      key={key}
-                      name={name}
-                      img={`${PUB}/images/products/${key}.jpg`}
-                      testId={`product-card-${key}`}
-                      onOpen={() =>
-                        setActive(FLAT.findIndex((f) => f.key === key))
-                      }
-                    />
-                  ))}
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-
-        <Reveal delay={0.1}>
-          <div
-            className="mt-20 lg:mt-24 border border-line px-8 py-10 lg:px-12 flex flex-col lg:flex-row lg:items-center gap-8 justify-between"
-            data-testid="custom-cnc-strip"
+      <div className="mt-10 flex flex-wrap gap-2" role="tablist" aria-label="Product categories">
+        {CATEGORIES.map((cat, i) => (
+          <button
+            key={cat.name}
+            type="button"
+            role="tab"
+            aria-selected={tab === i}
+            onClick={() => setTab(i)}
+            data-testid={`product-tab-${i}`}
+            className={`rounded-full px-4 py-2 text-[15px] font-medium transition-colors duration-200 ${
+              tab === i ? "bg-ink text-white" : "bg-surface text-ink hover:bg-hairline"
+            }`}
           >
-            <div>
-              <span className="text-[10px] tracking-[0.35em] uppercase text-copper font-semibold">
-                Custom CNC Machined Parts
-              </span>
-              <p className="mt-3 font-display uppercase text-xl lg:text-2xl text-bone leading-snug max-w-2xl">
-                Prototype Development · Tight-Tolerance Machining · Batch
-                Production · OEM Custom Parts
-              </p>
-            </div>
-            <button
-              onClick={onQuote}
-              data-testid="manufacture-quote-button"
-              className="group inline-flex items-center gap-3 bg-copper hover:bg-copper-hover text-white text-sm font-semibold tracking-[0.12em] uppercase px-8 py-4 transition-colors duration-300 shrink-0"
-            >
-              Request a Quote
-              <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
-            </button>
-          </div>
-        </Reveal>
+            {cat.name}
+          </button>
+        ))}
       </div>
+
+      <ul
+        role="tabpanel"
+        aria-label={CATEGORIES[tab].name}
+        className="mt-8 grid grid-cols-2 gap-x-5 gap-y-8 sm:grid-cols-3 lg:grid-cols-5"
+      >
+        {CATEGORIES[tab].items.map(([name, key]) => (
+          <ProductCard
+            key={key}
+            name={name}
+            img={`${PUB}/images/products/${key}.jpg`}
+            testId={`product-card-${key}`}
+            onOpen={() => setActive(FLAT.findIndex((f) => f.key === key))}
+          />
+        ))}
+      </ul>
 
       <AnimatePresence>
         {current && (
-          <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-8">
+          <div
+            className="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-10"
+            role="dialog"
+            aria-modal="true"
+            aria-label={current.name}
+          >
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.25 }}
               onClick={() => setActive(null)}
-              className="absolute inset-0 bg-coal/92 backdrop-blur-md"
+              className="absolute inset-0 bg-ink/90 backdrop-blur-sm"
               data-testid="product-lightbox-backdrop"
             />
-            <motion.div
+            <motion.figure
               key={current.key}
-              initial={{ opacity: 0, scale: 0.96 }}
+              initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.97 }}
-              transition={{ duration: 0.45, ease: EASE }}
-              className="relative z-10 w-full max-w-4xl"
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35, ease: EASE }}
+              className="relative z-10 w-full max-w-3xl"
               data-testid="product-lightbox"
             >
-              <div className="img-frame">
-                <img
-                  src={current.img}
-                  alt={current.name}
-                  className="w-full max-h-[70vh] object-contain bg-coal-deep"
-                  data-testid="product-lightbox-image"
-                />
-              </div>
-              <div className="mt-5 flex items-center justify-between gap-4 flex-wrap">
-                <div>
-                  <p className="text-[10px] tracking-[0.3em] uppercase text-copper font-semibold">
-                    {current.category}
-                  </p>
-                  <h3
-                    className="mt-1 font-display font-semibold uppercase text-2xl text-bone"
-                    data-testid="product-lightbox-title"
-                  >
+              <img
+                src={current.img}
+                alt={current.name}
+                className="max-h-[70vh] w-full rounded-xl object-contain"
+                data-testid="product-lightbox-image"
+              />
+              <figcaption className="mt-4 flex items-baseline justify-between gap-4 text-white">
+                <span>
+                  <span className="block text-[14px] text-white/60">{current.category}</span>
+                  <span className="text-[20px] font-semibold" data-testid="product-lightbox-title">
                     {current.name}
-                  </h3>
-                </div>
-                <span className="text-[11px] tracking-[0.25em] uppercase text-ash">
-                  {String(active + 1).padStart(2, "0")} / {String(FLAT.length).padStart(2, "0")}
+                  </span>
                 </span>
-              </div>
-            </motion.div>
+                <span className="text-[14px] text-white/60">
+                  {active + 1} of {FLAT.length}
+                </span>
+              </figcaption>
+            </motion.figure>
 
-            <button
+            <NavButton
               onClick={() => setActive(null)}
-              data-testid="product-lightbox-close"
               aria-label="Close"
-              className="absolute top-5 right-5 z-20 w-11 h-11 border border-line-strong flex items-center justify-center text-bone/70 hover:text-copper hover:border-copper transition-colors duration-300"
+              data-testid="product-lightbox-close"
+              className="right-4 top-4"
             >
               <X size={18} />
-            </button>
-            <button
+            </NavButton>
+            <NavButton
               onClick={() => setActive((a) => (a - 1 + FLAT.length) % FLAT.length)}
-              data-testid="product-lightbox-prev"
               aria-label="Previous product"
-              className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full border border-bone/25 flex items-center justify-center text-bone/60 hover:border-copper hover:text-copper transition-colors duration-300"
+              data-testid="product-lightbox-prev"
+              className="left-3 top-1/2 -translate-y-1/2 lg:left-8"
             >
               <ArrowLeft size={17} />
-            </button>
-            <button
+            </NavButton>
+            <NavButton
               onClick={() => setActive((a) => (a + 1) % FLAT.length)}
-              data-testid="product-lightbox-next"
               aria-label="Next product"
-              className="absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full border border-bone/25 flex items-center justify-center text-bone/60 hover:border-copper hover:text-copper transition-colors duration-300"
+              data-testid="product-lightbox-next"
+              className="right-3 top-1/2 -translate-y-1/2 lg:right-8"
             >
               <ArrowRight size={17} />
-            </button>
+            </NavButton>
           </div>
         )}
       </AnimatePresence>
-    </section>
+    </Section>
   );
 };

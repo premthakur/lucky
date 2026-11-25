@@ -3,20 +3,21 @@ export const PUB = process.env.PUBLIC_URL || "";
 const S = (name) => `${PUB}/images/stock/${name}.jpg`;
 
 export const IMAGES = {
-  hero: `${PUB}/images/hero.jpg`,
-  about: `${PUB}/images/about.jpg`,
-  components: `${PUB}/images/components.jpg`,
-  quality: `${PUB}/images/quality.jpg`,
+  inspection: `${PUB}/images/quality.jpg`,
+  lathe: `${PUB}/images/about.jpg`,
   cnc: `${PUB}/images/cnc.jpg`,
-  rail: `${PUB}/images/rail.jpg`,
-  indHeavy: S("indHeavy"),
-  indRail: S("indRail"),
-  indPharma: S("indPharma"),
-  indEng: S("indEng"),
+  shopFloor: `${PUB}/images/hero-factory.jpg`,
   galFactory: S("galFactory"),
-  galLaser: S("galLaser"),
   galOperator: S("galOperator"),
   galCnc: S("galCnc"),
   galComponent: S("galComponent"),
-  galPipes: S("galPipes"),
+};
+
+export const productImg = (key) => `${PUB}/images/products/${key}.jpg`;
+
+// CC0 public-domain photos from rawpixel (via Openverse): greenLathe 6075509, faceMill 5959231, drillTap 5941409.
+export const STOCK = {
+  greenLathe: S("greenLathe"),
+  faceMill: S("faceMill"),
+  drillTap: S("drillTap"),
 };

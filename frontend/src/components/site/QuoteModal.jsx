@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, X } from "lucide-react";
-import { EASE } from "./Reveal";
+import { EASE } from "./ui";
+import { CONTACT } from "@/data/site";
 
 const inputCls =
-  "w-full bg-transparent border border-line focus:border-copper outline-none px-4 py-3 text-sm text-bone placeholder:text-ash transition-colors duration-300";
-const labelCls = "block text-[10px] tracking-[0.25em] uppercase text-steel font-semibold mb-2";
+  "w-full rounded-lg bg-white border border-hairline focus:border-copper focus:outline-none px-4 py-3 text-[15px] text-ink placeholder:text-graphite/70 transition-colors duration-200";
+const labelCls = "block text-[14px] font-medium text-ink mb-2";
 
 const SCRIPT_URL = process.env.REACT_APP_APPS_SCRIPT_URL;
 
@@ -67,7 +68,7 @@ export const QuoteModal = ({ open, onClose }) => {
       });
       setSent(true);
     } catch (err) {
-      setError("Could not send your enquiry. Please try again or email us at contact@luckyengineeringwork.com.");
+      setError(`Your RFQ was not sent. Check your connection and try again, or email it to ${CONTACT.email}.`);
     } finally {
       setSending(false);
     }
@@ -83,62 +84,62 @@ export const QuoteModal = ({ open, onClose }) => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35 }}
             onClick={onClose}
-            className="absolute inset-0 bg-coal/85 backdrop-blur-sm"
+            className="absolute inset-0 bg-ink/50 backdrop-blur-sm"
             data-testid="quote-modal-backdrop"
           />
           <motion.div
-            initial={{ opacity: 0, y: 32, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 24, scale: 0.98 }}
-            transition={{ duration: 0.5, ease: EASE }}
-            className="relative w-full max-w-xl bg-surface border border-line p-8 md:p-10 max-h-[90vh] overflow-y-auto"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 12 }}
+            transition={{ duration: 0.4, ease: EASE }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="quote-title"
+            className="relative w-full max-w-xl rounded-2xl bg-paper p-7 md:p-10 max-h-[90vh] overflow-y-auto"
             data-testid="quote-modal"
           >
             <button
               onClick={onClose}
               data-testid="quote-close-button"
               aria-label="Close"
-              className="absolute top-5 right-5 text-steel hover:text-copper transition-colors duration-300"
+              className="absolute top-5 right-5 rounded-full p-1.5 text-graphite hover:text-ink transition-colors duration-200"
             >
               <X size={20} />
             </button>
 
             {sent ? (
               <div className="py-10 text-center" data-testid="quote-success-message">
-                <span className="mx-auto w-14 h-14 border-2 border-copper flex items-center justify-center">
+                <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-copper/10">
                   <Check size={26} className="text-copper" />
                 </span>
-                <h3 className="mt-7 font-display font-semibold uppercase text-2xl text-bone">
-                  Enquiry Received
+                <h3 className="mt-6 text-[26px] font-semibold tracking-[-0.02em] text-ink">
+                  RFQ sent
                 </h3>
-                <p className="mt-3 text-sm text-steel max-w-xs mx-auto leading-relaxed">
-                  Thank you. Our team will get back to you shortly to discuss
-                  your requirement.
+                <p className="mt-3 text-[16px] text-graphite max-w-xs mx-auto leading-relaxed">
+                  We will review your requirement and reply with any technical
+                  clarifications before we quote.
                 </p>
                 {!SCRIPT_URL && (
-                  <p className="mt-6 text-[11px] tracking-[0.2em] uppercase text-ash">
-                    Demo mode — form goes live once connected to Google Sheets
+                  <p className="mt-6 text-[13px] text-graphite">
+                    Demo mode: the form goes live once it is connected to Google Sheets.
                   </p>
                 )}
                 <button
                   onClick={onClose}
                   data-testid="quote-success-close-button"
-                  className="mt-8 inline-flex items-center bg-copper hover:bg-copper-hover text-white text-[13px] font-semibold tracking-[0.12em] uppercase px-8 py-3.5 transition-colors duration-300"
+                  className="mt-8 inline-flex items-center rounded-full bg-copper hover:bg-copper-hover text-white text-[15px] font-semibold px-7 py-3 transition-colors duration-200"
                 >
                   Done
                 </button>
               </div>
             ) : (
               <>
-                <span className="text-[10px] tracking-[0.35em] uppercase text-copper font-semibold">
-                  Request a Quote
-                </span>
-                <h3 className="mt-3 font-display font-semibold uppercase text-3xl text-bone leading-tight">
-                  Tell Us What You Need
+                <h3 id="quote-title" className="pr-8 text-[28px] font-semibold leading-tight tracking-[-0.02em] text-ink">
+                  Send an RFQ
                 </h3>
-                <p className="mt-3 text-sm text-steel leading-relaxed">
-                  Share a few details about your component or application and
-                  we will take it from there.
+                <p className="mt-2 text-[16px] text-graphite leading-relaxed">
+                  Attach your drawing and tell us the material, quantity and
+                  delivery date.
                 </p>
 
                 <form
@@ -151,7 +152,7 @@ export const QuoteModal = ({ open, onClose }) => {
                     <input id="q-name" name="name" required placeholder="Your name" className={inputCls} data-testid="quote-name-input" />
                   </div>
                   <div>
-                    <label className={labelCls} htmlFor="q-company">Company Name *</label>
+                    <label className={labelCls} htmlFor="q-company">Company *</label>
                     <input id="q-company" name="company" required placeholder="Company name" className={inputCls} data-testid="quote-company-input" />
                   </div>
                   <div>
@@ -182,49 +183,49 @@ export const QuoteModal = ({ open, onClose }) => {
                       id="q-message"
                       name="requirement"
                       rows={4}
-                      placeholder="Describe the component, material, quantity or drawing details..."
+                      placeholder="Component, material grade, quantity, required processes, inspection needs and target date"
                       className={`${inputCls} resize-none`}
                       data-testid="quote-message-input"
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className={labelCls} htmlFor="q-file">Upload Drawing (PDF — optional)</label>
+                    <label className={labelCls} htmlFor="q-file">Drawing (PDF, optional)</label>
                     <label
                       htmlFor="q-file"
-                      className="flex items-center justify-between gap-4 border border-dashed border-line-strong hover:border-copper px-4 py-3.5 cursor-pointer transition-colors duration-300"
+                      className="flex items-center justify-between gap-4 rounded-lg border border-dashed border-ink/25 bg-white hover:border-copper [&:has(+input:focus-visible)]:border-copper [&:has(+input:focus-visible)]:ring-2 [&:has(+input:focus-visible)]:ring-copper/30 px-4 py-3.5 cursor-pointer transition-colors duration-200"
                     >
-                      <span className="text-sm text-steel truncate">
+                      <span className="text-[15px] text-graphite truncate">
                         {file ? file.name : "Choose a PDF drawing to attach"}
                       </span>
-                      <span className="text-[10px] tracking-[0.25em] uppercase text-copper font-semibold shrink-0">
-                        Browse
+                      <span className="text-[14px] text-copper font-semibold shrink-0">
+                        Choose file
                       </span>
                     </label>
                     <input
                       id="q-file"
                       type="file"
                       accept="application/pdf,.pdf"
-                      className="hidden"
+                      className="peer sr-only"
                       onChange={(e) => setFile(e.target.files?.[0] || null)}
                       data-testid="quote-file-input"
                     />
                   </div>
                   {error && (
-                    <p className="sm:col-span-2 text-sm text-red-400" data-testid="quote-error-message">
+                    <p className="sm:col-span-2 text-[15px] text-red-700" data-testid="quote-error-message">
                       {error}
                     </p>
                   )}
                   <div className="sm:col-span-2 flex items-center justify-between gap-4 flex-wrap">
-                    <p className="text-[10px] tracking-[0.15em] uppercase text-ash">
-                      {SCRIPT_URL ? "Goes straight to our team" : "Demo mode — not connected yet"}
+                    <p className="text-[13px] text-graphite">
+                      {SCRIPT_URL ? "Goes straight to our team." : "Demo mode: not connected yet."}
                     </p>
                     <button
                       type="submit"
                       disabled={sending}
                       data-testid="quote-submit-button"
-                      className="inline-flex items-center bg-copper hover:bg-copper-hover disabled:opacity-60 text-white text-[13px] font-semibold tracking-[0.12em] uppercase px-8 py-3.5 transition-colors duration-300"
+                      className="inline-flex items-center rounded-full bg-copper hover:bg-copper-hover disabled:opacity-60 text-white text-[15px] font-semibold px-7 py-3 transition-colors duration-200"
                     >
-                      {sending ? "Sending..." : "Submit Enquiry"}
+                      {sending ? "Sending…" : "Send RFQ"}
                     </button>
                   </div>
                 </form>

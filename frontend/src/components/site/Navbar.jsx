@@ -1,142 +1,139 @@
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, Menu, X } from "lucide-react";
-import { EASE } from "./Reveal";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Menu, X } from "lucide-react";
+import { SECTIONS } from "@/data/site";
+import { Container, useQuote } from "./ui";
 
-const LINKS = [
-  { label: "About", href: "#about" },
-  { label: "Industries", href: "#industries" },
-  { label: "Capabilities", href: "#capabilities" },
-  { label: "Quality", href: "#quality" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "Team", href: "#team" },
-  { label: "Blog", href: "#blog" },
-  { label: "Contact", href: "#contact" },
-];
+export const Logo = () => (
+  <span className="flex items-center gap-2.5">
+    <span
+      aria-hidden
+      className="grid h-8 w-8 place-items-center rounded-md bg-ink text-[12px] font-bold tracking-tight text-white [font-stretch:80%]"
+    >
+      LEW
+    </span>
+    <span className="text-[16px] font-semibold tracking-[-0.01em] text-ink [font-stretch:92%]">
+      Lucky Engineering Works
+    </span>
+  </span>
+);
 
-export const Navbar = ({ onQuote }) => {
-  const [scrolled, setScrolled] = useState(false);
+// Scrolls to a home-page section, routing to Home first when needed.
+export const useSectionLink = () => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  return (id) => (e) => {
+    e.preventDefault();
+    if (pathname === "/") {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      navigate("/", { state: { scrollTo: id } });
+    }
+  };
+};
+
+const linkCls = "text-[15px] text-graphite transition-colors duration-200 hover:text-ink";
+
+export const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const onQuote = useQuote();
+  const toSection = useSectionLink();
+  const { pathname } = useLocation();
+
+  useEffect(() => setOpen(false), [pathname]);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   return (
-    <>
-      <motion.header
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
-        className={`fixed top-0 left-0 right-0 z-[70] transition-colors duration-500 ${
-          scrolled
-            ? "bg-coal/70 backdrop-blur-xl border-b border-white/10"
-            : "bg-transparent border-b border-transparent"
-        }`}
-        data-testid="main-header"
-      >
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 h-20 flex items-center justify-between">
-          <a href="#top" data-testid="nav-logo" className="flex items-center gap-3 group">
-            <span className="w-9 h-9 border-2 border-copper flex items-center justify-center font-display font-semibold text-copper text-[13px] tracking-[0.1em] transition-colors duration-500 group-hover:bg-copper group-hover:text-coal">
-              LEW
-            </span>
-            <span className="font-display font-semibold text-sm tracking-[0.2em] text-bone leading-tight">
-              LUCKY ENGINEERING
-              <span className="block text-[9px] tracking-[0.35em] text-steel font-medium">WORKS · EST. 2010</span>
-            </span>
-          </a>
+    <header
+      className="sticky top-0 z-50 border-b border-hairline bg-paper/85 backdrop-blur-xl"
+      data-testid="main-header"
+    >
+      <Container className="flex h-16 items-center justify-between gap-6">
+        <Link to="/" aria-label="Lucky Engineering Works, home" data-testid="nav-logo">
+          <Logo />
+        </Link>
 
-          <nav className="hidden lg:flex items-center gap-9" data-testid="nav-links">
-            {LINKS.map((l) => (
+        <nav className="hidden items-center gap-7 xl:flex" aria-label="Main" data-testid="nav-links">
+          {SECTIONS.map((s) => (
+            <a key={s.id} href="#/" onClick={toSection(s.id)} className={linkCls}>
+              {s.label}
+            </a>
+          ))}
+          <NavLink
+            to="/about"
+            className={({ isActive }) => (isActive ? "text-[15px] text-ink" : linkCls)}
+          >
+            About
+          </NavLink>
+        </nav>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onQuote}
+            data-testid="nav-quote-button"
+            className="hidden rounded-full bg-copper px-5 py-2 text-[14px] font-semibold text-white transition-colors duration-200 hover:bg-copper-hover sm:inline-flex"
+          >
+            Send an RFQ
+          </button>
+          <button
+            type="button"
+            onClick={() => setOpen((o) => !o)}
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            data-testid="nav-menu-button"
+            className="rounded-md p-2 text-ink xl:hidden"
+          >
+            {open ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
+      </Container>
+
+      {open && (
+        <div
+          className="fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto border-t border-hairline bg-paper xl:hidden"
+          data-testid="mobile-menu"
+        >
+          <Container className="flex flex-col py-4">
+            <Link to="/" className="border-b border-hairline py-4 text-[20px] font-medium text-ink">
+              Home
+            </Link>
+            {SECTIONS.map((s) => (
               <a
-                key={l.label}
-                href={l.href}
-                data-testid={`nav-link-${l.label.toLowerCase()}`}
-                className="relative text-[13px] tracking-[0.14em] uppercase text-steel hover:text-bone transition-colors duration-300 after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-copper after:transition-[width] after:duration-300 hover:after:w-full"
+                key={s.id}
+                href="#/"
+                onClick={(e) => {
+                  setOpen(false);
+                  toSection(s.id)(e);
+                }}
+                className="border-b border-hairline py-4 text-[20px] font-medium text-ink"
               >
-                {l.label}
+                {s.label}
               </a>
             ))}
-          </nav>
-
-          <div className="flex items-center gap-4 ml-9">
+            <Link to="/about" className="border-b border-hairline py-4 text-[20px] font-medium text-ink">
+              About
+            </Link>
             <button
-              onClick={onQuote}
-              data-testid="nav-quote-button"
-              className="hidden sm:inline-flex items-center gap-2 bg-copper hover:bg-copper-hover text-white text-[13px] font-semibold tracking-[0.12em] uppercase px-6 py-3 whitespace-nowrap transition-colors duration-300"
+              type="button"
+              onClick={() => {
+                setOpen(false);
+                onQuote();
+              }}
+              data-testid="mobile-quote-button"
+              className="mt-8 rounded-full bg-copper px-6 py-3.5 text-[16px] font-semibold text-white"
             >
-              Request a Quote
-              <ArrowUpRight size={15} />
+              Send an RFQ
             </button>
-            <button
-              onClick={() => setOpen(true)}
-              data-testid="nav-menu-button"
-              className="lg:hidden text-bone p-2"
-              aria-label="Open menu"
-            >
-              <Menu size={22} />
-            </button>
-          </div>
+          </Container>
         </div>
-      </motion.header>
-
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, ease: EASE }}
-            className="fixed inset-0 z-[90] bg-coal/95 backdrop-blur-2xl flex flex-col"
-            data-testid="mobile-menu"
-          >
-            <div className="h-20 px-6 flex items-center justify-between">
-              <span className="font-display font-semibold text-lg tracking-[0.22em]">LEW · LUCKY ENGINEERING</span>
-              <button
-                onClick={() => setOpen(false)}
-                data-testid="mobile-menu-close"
-                className="text-bone p-2"
-                aria-label="Close menu"
-              >
-                <X size={24} />
-              </button>
-            </div>
-            <nav className="flex-1 flex flex-col justify-center px-8 gap-2">
-              {LINKS.map((l, i) => (
-                <motion.a
-                  key={l.label}
-                  href={l.href}
-                  onClick={() => setOpen(false)}
-                  data-testid={`mobile-nav-link-${l.label.toLowerCase()}`}
-                  initial={{ opacity: 0, y: 28 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.08 * i + 0.1, duration: 0.6, ease: EASE }}
-                  className="font-display uppercase text-4xl py-3 text-bone/80 hover:text-copper transition-colors duration-300 border-b border-line"
-                >
-                  {l.label}
-                </motion.a>
-              ))}
-              <motion.button
-                onClick={() => {
-                  setOpen(false);
-                  onQuote();
-                }}
-                data-testid="mobile-quote-button"
-                initial={{ opacity: 0, y: 28 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6, duration: 0.6, ease: EASE }}
-                className="mt-10 inline-flex items-center justify-center gap-2 bg-copper text-white text-sm font-semibold tracking-[0.12em] uppercase px-8 py-4"
-              >
-                Request a Quote
-                <ArrowUpRight size={16} />
-              </motion.button>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+      )}
+    </header>
   );
 };
